@@ -6,34 +6,53 @@
 <title>Odak Not</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#0a0a0a;color:white}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+outline:none;
+}
 
-header{text-align:center;padding:20px}
+body{
+background:#0a0a0a;
+color:white;
+font-family:Arial;
+}
+
+header{
+text-align:center;
+padding:20px;
+}
+
+h1{
+font-size:32px;
+}
 
 #bar{
 display:flex;
-gap:10px;
 justify-content:center;
+gap:10px;
 padding:10px;
 flex-wrap:wrap;
 }
 
 button{
-padding:10px 20px;
-border:0;
+padding:12px 18px;
+border:none;
 border-radius:8px;
 cursor:pointer;
 background:#222;
 color:white;
-transition:.2s;
 }
 
-button:hover{background:red;transform:scale(1.05)}
+button:hover{
+background:red;
+}
 
 #search{
 padding:10px;
+border:none;
 border-radius:8px;
-border:0;
 background:#222;
 color:white;
 }
@@ -41,8 +60,8 @@ color:white;
 #notes{
 display:flex;
 flex-wrap:wrap;
-gap:15px;
 justify-content:center;
+gap:15px;
 padding:20px;
 }
 
@@ -53,20 +72,24 @@ padding:10px;
 border-radius:10px;
 cursor:pointer;
 transition:.2s;
+border:none;
 }
 
-.note:hover{transform:scale(1.05);box-shadow:0 0 15px red}
+.note:hover{
+transform:scale(1.05);
+box-shadow:0 0 15px red;
+}
 
-.red{background:#3a0000}
-.blue{background:#001133}
-.green{background:#003300}
-.yellow{background:#333300}
+.red{background:#3a0000;}
+.blue{background:#001133;}
+.green{background:#003300;}
+.yellow{background:#333300;}
 
 #modal{
 display:none;
 position:fixed;
 inset:0;
-background:rgba(0,0,0,.8);
+background:rgba(0,0,0,.9);
 justify-content:center;
 align-items:center;
 }
@@ -75,29 +98,36 @@ align-items:center;
 background:#111;
 padding:20px;
 border-radius:10px;
-width:300px;
+width:320px;
 }
 
 input,textarea,select{
 width:100%;
-margin:5px 0;
-padding:8px;
-border:0;
+margin:6px 0;
+padding:10px;
+border:none;
 border-radius:6px;
 background:#222;
 color:white;
+outline:none;
 }
 
-textarea{height:100px}
+textarea{height:120px;}
 
-.save{background:green}
+.save{
+background:green;
+}
+
+.save:hover{
+background:#00aa00;
+}
 </style>
 </head>
 
 <body>
 
 <header>
-<h2>🔥 Odak Not</h2>
+<h1>🔥 Odak Not</h1>
 <p>Şifreli Not Defteri</p>
 </header>
 
@@ -141,13 +171,11 @@ const color = document.getElementById("color");
 const notesDiv = document.getElementById("notes");
 const search = document.getElementById("search");
 
-/* OPEN */
 add.onclick = () => {
 modal.style.display="flex";
 edit=null;
-}
+};
 
-/* SAVE */
 save.onclick = () => {
 
 let n = {
@@ -163,9 +191,8 @@ else notes[edit]=n;
 localStorage.setItem("notes",JSON.stringify(notes));
 modal.style.display="none";
 render();
-}
+};
 
-/* RENDER */
 function render(){
 notesDiv.innerHTML="";
 
@@ -178,7 +205,7 @@ if(n.title.toLowerCase().includes(f) || n.text.toLowerCase().includes(f)){
 let d = document.createElement("div");
 d.className="note "+n.color;
 
-d.innerHTML = `<b>${n.title}</b><br>${n.text.slice(0,40)}`;
+d.innerHTML=`<b>${n.title}</b><br>${n.text.slice(0,40)}`;
 
 d.onclick=()=>{
 if(n.pass){
@@ -193,7 +220,7 @@ color.value=n.color;
 
 edit=i;
 modal.style.display="flex";
-}
+};
 
 notesDiv.appendChild(d);
 }
@@ -201,7 +228,6 @@ notesDiv.appendChild(d);
 }
 
 search.oninput=render;
-
 render();
 </script>
 
