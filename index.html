@@ -1,192 +1,256 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Odak Not Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Odak Not</title>
 
 <style>
 body{
     margin:0;
     font-family:Arial;
-    background:#0f0f0f;
+    background:#0a0a0a;
     color:white;
 }
 
+/* HEADER */
 header{
-    padding:15px;
     text-align:center;
-    font-size:22px;
-    background:#1c1c1c;
+    padding:25px;
 }
 
-.container{
+header h1{
+    font-size:34px;
+}
+
+header p{
+    font-size:18px;
+    color:#aaa;
+}
+
+/* TOP BAR */
+#bar{
     display:flex;
-    gap:15px;
-    padding:15px;
-}
-
-.panel{
-    flex:1;
-    background:#1e1e1e;
-    padding:15px;
-    border-radius:10px;
-}
-
-input,textarea,button{
-    width:100%;
-    margin-top:10px;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
     padding:10px;
-    border:none;
-    border-radius:6px;
 }
 
 button{
-    background:#00aaff;
-    color:white;
+    padding:14px 22px;
+    border:0;
+    border-radius:10px;
     cursor:pointer;
+    background:#222;
+    color:white;
+    font-size:16px;
+    transition:.2s;
+}
+
+button:hover{
+    background:red;
+    transform:scale(1.08);
+}
+
+#search{
+    padding:12px;
+    border-radius:10px;
+    border:0;
+    background:#222;
+    color:white;
+    font-size:16px;
+    width:220px;
+}
+
+/* NOTES */
+#notes{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:18px;
+    padding:20px;
 }
 
 .note{
+    width:240px;
+    min-height:150px;
+    padding:15px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:.25s;
+    font-size:16px;
+}
+
+.note b{
+    font-size:18px;
+}
+
+.note:hover{
+    transform:scale(1.06);
+    box-shadow:0 0 20px red;
+}
+
+/* COLORS */
+.red{background:#3a0000;}
+.blue{background:#001133;}
+.green{background:#003300;}
+.yellow{background:#333300;}
+
+/* MODAL */
+#modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.85);
+    justify-content:center;
+    align-items:center;
+}
+
+.box{
+    background:#111;
+    padding:22px;
+    border-radius:12px;
+    width:320px;
+}
+
+input,textarea,select{
+    width:100%;
+    margin:6px 0;
     padding:10px;
-    margin-top:10px;
+    border:0;
     border-radius:8px;
+    background:#222;
+    color:white;
+    font-size:16px;
 }
 
-.small{
-    font-size:12px;
-    opacity:0.7;
+textarea{
+    height:120px;
 }
 
-.top{
-    display:flex;
-    justify-content:space-between;
+.save{
+    background:green;
+    font-size:16px;
+}
+
+.save:hover{
+    background:#00ff88;
 }
 </style>
 </head>
 
 <body>
 
-<header>🔥 ODAK NOT PRO</header>
+<header>
+    <h1>🔥 Odak Not</h1>
+    <p>Şifreli Not Defteri</p>
+</header>
 
-<div class="container">
-
-<!-- SOL PANEL -->
-<div class="panel">
-<h3>Not Ekle</h3>
-
-<input id="title" placeholder="Başlık">
-<textarea id="text" placeholder="Not"></textarea>
-<input id="color" type="color">
-<input id="password" placeholder="Şifre (opsiyonel)">
-<label><input type="checkbox" id="pin"> Sabitle</label>
-
-<button onclick="addNote()">Kaydet</button>
+<div id="bar">
+    <button id="add">➕ Not Ekle</button>
+    <input id="search" placeholder="Not ara...">
 </div>
-
-<!-- SAĞ PANEL -->
-<div class="panel">
-<h3>Notlar</h3>
-
-<input id="search" oninput="render()" placeholder="Ara...">
 
 <div id="notes"></div>
-</div>
 
+<!-- MODAL -->
+<div id="modal">
+    <div class="box">
+        <input id="title" placeholder="Başlık">
+        <textarea id="text" placeholder="Not yaz..."></textarea>
+        <input id="pass" type="password" placeholder="Şifre (opsiyonel)">
+
+        <select id="color">
+            <option value="red">Kırmızı</option>
+            <option value="blue">Mavi</option>
+            <option value="green">Yeşil</option>
+            <option value="yellow">Sarı</option>
+        </select>
+
+        <button class="save" id="save">Kaydet</button>
+    </div>
 </div>
 
 <script>
 let notes = JSON.parse(localStorage.getItem("notes")) || [];
+let edit = null;
 
-function save(){
-    localStorage.setItem("notes", JSON.stringify(notes));
+const add = document.getElementById("add");
+const modal = document.getElementById("modal");
+const save = document.getElementById("save");
+
+const title = document.getElementById("title");
+const text = document.getElementById("text");
+const pass = document.getElementById("pass");
+const color = document.getElementById("color");
+
+const notesDiv = document.getElementById("notes");
+const search = document.getElementById("search");
+
+/* OPEN */
+add.onclick = () => {
+    modal.style.display = "flex";
+    edit = null;
+
+    add.style.transform = "scale(1.1)";
+    setTimeout(()=>add.style.transform="scale(1)",200);
+};
+
+/* SAVE */
+save.onclick = () => {
+
+let n = {
+title:title.value,
+text:text.value,
+pass:pass.value,
+color:color.value
+};
+
+if(edit==null) notes.push(n);
+else notes[edit]=n;
+
+localStorage.setItem("notes",JSON.stringify(notes));
+modal.style.display="none";
+render();
 }
 
-function addNote(){
-    let n = {
-        title: title.value,
-        text: text.value,
-        color: color.value,
-        password: password.value,
-        pin: pin.checked,
-        time: Date.now()
-    };
-
-    if(!n.title || !n.text) return alert("Boş bırakma!");
-
-    notes.push(n);
-    save();
-    render();
-}
-
+/* RENDER */
 function render(){
-    let box = document.getElementById("notes");
-    let q = document.getElementById("search").value.toLowerCase();
+notesDiv.innerHTML="";
 
-    box.innerHTML = "";
+let f = search.value.toLowerCase();
 
-    let sorted = notes.sort((a,b)=> b.pin - a.pin);
+notes.forEach((n,i)=>{
 
-    sorted.forEach((n,i)=>{
+if(n.title.toLowerCase().includes(f) || n.text.toLowerCase().includes(f)){
 
-        if(!n.title.toLowerCase().includes(q) &&
-           !n.text.toLowerCase().includes(q)) return;
+let d = document.createElement("div");
+d.className="note "+n.color;
 
-        let div = document.createElement("div");
-        div.className = "note";
-        div.style.background = n.color;
+d.innerHTML = `<b>${n.title}</b><br><br>${n.text.slice(0,60)}`;
 
-        div.innerHTML = `
-            <div class="top">
-                <b>${n.title}</b>
-                ${n.pin ? "📌" : ""}
-            </div>
-
-            <div class="small">
-                ${n.password ? "🔒 Şifreli" : "Açık"} | ${new Date(n.time).toLocaleString()}
-            </div>
-
-            <button onclick="openNote(${i})">Aç</button>
-            <button onclick="editNote(${i})">Düzenle</button>
-            <button onclick="delNote(${i})">Sil</button>
-        `;
-
-        box.appendChild(div);
-    });
+d.onclick=()=>{
+if(n.pass){
+let p = prompt("Şifre gir:");
+if(p!=n.pass){alert("Yanlış şifre!");return;}
 }
 
-function openNote(i){
-    let n = notes[i];
+title.value=n.title;
+text.value=n.text;
+pass.value=n.pass;
+color.value=n.color;
 
-    if(n.password){
-        let p = prompt("Şifre:");
-        if(p !== n.password) return alert("Yanlış şifre!");
-    }
-
-    alert(n.title + "\n\n" + n.text);
+edit=i;
+modal.style.display="flex";
 }
 
-function delNote(i){
-    notes.splice(i,1);
-    save();
-    render();
+notesDiv.appendChild(d);
+}
+});
 }
 
-function editNote(i){
-    let n = notes[i];
-
-    let p = n.password ? prompt("Şifre:") : "";
-
-    if(n.password && p !== n.password){
-        return alert("Yanlış şifre!");
-    }
-
-    let newText = prompt("Yeni not:", n.text);
-    if(newText){
-        notes[i].text = newText;
-        save();
-        render();
-    }
-}
+search.oninput=render;
 
 render();
 </script>
