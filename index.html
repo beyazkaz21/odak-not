@@ -2,253 +2,220 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Odak Not</title>
-
+<title>🔥 Odak Not</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-
-body{
-background:#0a0a0a;
-color:white;
-font-family:Arial;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0b0b0b;
+    color: white;
 }
 
-header{
-text-align:center;
-padding:25px;
+/* HEADER */
+.header {
+    text-align: center;
+    padding: 30px 10px;
 }
 
-h1{font-size:34px;}
-
-#bar{
-display:flex;
-gap:10px;
-align-items:center;
-padding:10px 15px;
+.header h1 {
+    font-size: 32px;
+    margin: 0;
 }
 
-button{
-padding:12px 16px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-background:#222;
-color:white;
+.header p {
+    font-size: 16px;
+    opacity: 0.7;
 }
 
-button:hover{background:red;}
-
-#search{
-width:140px;
-padding:8px;
-border:none;
-border-radius:6px;
-background:#222;
-color:white;
+/* TOP BAR */
+.top-bar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px;
 }
 
-#notes{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:15px;
-padding:20px;
+.search {
+    padding: 10px;
+    width: 200px;
+    border-radius: 8px;
+    border: none;
 }
 
-.note{
-width:260px;
-min-height:150px;
-padding:15px;
-border-radius:12px;
-cursor:pointer;
-font-size:18px;
+.add-btn {
+    padding: 10px 15px;
+    background: #6c5ce7;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-.red{background:#3a0000;}
-.blue{background:#001133;}
-.green{background:#003300;}
-.yellow{background:#333300;}
-
-#modal,#passModal{
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.9);
-justify-content:center;
-align-items:center;
+.add-btn:hover {
+    background: red;
+    transform: scale(1.05);
 }
 
-.box{
-background:#111;
-padding:20px;
-border-radius:10px;
-width:340px;
+/* FORM */
+.form {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    background: #111;
+    padding: 15px;
+    margin: 20px auto;
+    width: 300px;
+    border-radius: 12px;
+    animation: fadeIn 0.4s ease;
 }
 
-input,textarea,select{
-width:100%;
-margin:6px 0;
-padding:10px;
-border:none;
-border-radius:6px;
-background:#222;
-color:white;
+.form input, .form textarea, .form select {
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
 }
 
-textarea{height:120px;}
+.save-btn {
+    background: green;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
 
-.save{background:green;}
-.delete{background:#aa0000;}
-.delete:hover{background:red;}
+/* NOTES */
+.notes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.note {
+    width: 200px;
+    padding: 15px;
+    border-radius: 12px;
+    color: white;
+    position: relative;
+    animation: pop 0.3s ease;
+    transition: 0.3s;
+}
+
+.note:hover {
+    transform: scale(1.05);
+}
+
+.delete {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(-10px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+@keyframes pop {
+    from {transform: scale(0.8);}
+    to {transform: scale(1);}
+}
 </style>
 </head>
 
 <body>
 
-<header>
-<h1>🔥 Odak Not</h1>
-</header>
-
-<div id="bar">
-<button id="add">➕ Not Ekle</button>
-<input id="search" placeholder="Ara...">
+<div class="header">
+    <h1>🔥 Odak Not</h1>
+    <p>Şifreli Not Defteri</p>
 </div>
 
-<div id="notes"></div>
-
-<!-- Not modal -->
-<div id="modal">
-<div class="box">
-<input id="title" placeholder="Başlık">
-<textarea id="text" placeholder="Not"></textarea>
-<input id="pass" type="password" placeholder="Şifre (opsiyonel)">
-<select id="color">
-<option value="red">Kırmızı</option>
-<option value="blue">Mavi</option>
-<option value="green">Yeşil</option>
-<option value="yellow">Sarı</option>
-</select>
-
-<button class="save" id="save">Kaydet</button>
-<button class="delete" id="delete">Sil</button>
-</div>
+<div class="top-bar">
+    <input type="text" id="search" class="search" placeholder="Ara...">
+    <button class="add-btn" onclick="toggleForm()">+ Not Ekle</button>
 </div>
 
-<!-- Şifre ekranı -->
-<div id="passModal">
-<div class="box">
-<h3>Şifre Gir</h3>
-<input id="passInput" type="password" placeholder="Şifre">
-<button class="save" id="unlock">Aç</button>
+<div class="form" id="form">
+    <input type="text" id="title" placeholder="Başlık">
+    <textarea id="content" placeholder="Not yaz..."></textarea>
+    <input type="password" id="password" placeholder="Şifre (isteğe bağlı)">
+    
+    <select id="color">
+        <option value="#e74c3c">Kırmızı</option>
+        <option value="#3498db">Mavi</option>
+        <option value="#2ecc71">Yeşil</option>
+        <option value="#f1c40f">Sarı</option>
+    </select>
+
+    <button class="save-btn" onclick="saveNote()">Kaydet</button>
 </div>
-</div>
+
+<div class="notes" id="notes"></div>
 
 <script>
 let notes = JSON.parse(localStorage.getItem("notes")) || [];
-let edit = null;
-let openIndex = null;
 
-const add = document.getElementById("add");
-const modal = document.getElementById("modal");
-const passModal = document.getElementById("passModal");
-
-const title = document.getElementById("title");
-const text = document.getElementById("text");
-const pass = document.getElementById("pass");
-const color = document.getElementById("color");
-
-const notesDiv = document.getElementById("notes");
-const search = document.getElementById("search");
-
-const passInput = document.getElementById("passInput");
-
-add.onclick = () => {
-edit = null;
-modal.style.display="flex";
-};
-
-document.getElementById("save").onclick = () => {
-
-let n = {
-title:title.value,
-text:text.value,
-pass:pass.value,
-color:color.value
-};
-
-if(edit==null) notes.push(n);
-else notes[edit]=n;
-
-localStorage.setItem("notes",JSON.stringify(notes));
-modal.style.display="none";
-render();
-};
-
-document.getElementById("delete").onclick = () => {
-if(edit!=null){
-notes.splice(edit,1);
-localStorage.setItem("notes",JSON.stringify(notes));
-}
-modal.style.display="none";
-render();
-};
-
-function render(){
-notesDiv.innerHTML="";
-
-let f = search.value.toLowerCase();
-
-notes.forEach((n,i)=>{
-
-if(n.title.toLowerCase().includes(f) || n.text.toLowerCase().includes(f)){
-
-let d = document.createElement("div");
-d.className="note "+n.color;
-
-d.innerHTML=`<b>${n.title}</b>`;
-
-d.onclick=()=>{
-openIndex=i;
-
-if(n.pass && n.pass.length>0){
-passModal.style.display="flex";
-passInput.value="";
-}else{
-openNote(i);
-}
-};
-
-notesDiv.appendChild(d);
-}
-});
+function toggleForm() {
+    const form = document.getElementById("form");
+    form.style.display = form.style.display === "flex" ? "none" : "flex";
 }
 
-function openNote(i){
-let n = notes[i];
+function saveNote() {
+    const title = document.getElementById("title").value;
+    const content = document.getElementById("content").value;
+    const password = document.getElementById("password").value;
+    const color = document.getElementById("color").value;
 
-title.value=n.title;
-text.value=n.text;
-pass.value=n.pass;
-color.value=n.color;
+    const note = { title, content, password, color };
+    notes.push(note);
 
-edit=i;
-modal.style.display="flex";
+    localStorage.setItem("notes", JSON.stringify(notes));
+    renderNotes();
 }
 
-document.getElementById("unlock").onclick = () => {
-if(notes[openIndex].pass === passInput.value){
-passModal.style.display="none";
-openNote(openIndex);
-}else{
-alert("Yanlış şifre!");
+function deleteNote(index) {
+    notes.splice(index, 1);
+    localStorage.setItem("notes", JSON.stringify(notes));
+    renderNotes();
 }
-};
 
-search.oninput=render;
+function renderNotes() {
+    const container = document.getElementById("notes");
+    container.innerHTML = "";
 
-render();
+    notes.forEach((note, index) => {
+        const div = document.createElement("div");
+        div.className = "note";
+        div.style.background = note.color;
+
+        div.innerHTML = `
+            <span class="delete" onclick="deleteNote(${index})">❌</span>
+            <h3>${note.title}</h3>
+            <p>${note.password ? "🔒 Şifreli" : note.content}</p>
+        `;
+
+        div.onclick = () => {
+            if (note.password) {
+                let input = prompt("Şifre gir:");
+                if (input === note.password) {
+                    alert(note.content);
+                } else {
+                    alert("Yanlış şifre!");
+                }
+            }
+        };
+
+        container.appendChild(div);
+    });
+}
+
+renderNotes();
 </script>
 
 </body>
 </html>
+
