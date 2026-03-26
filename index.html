@@ -6,170 +6,123 @@
 <title>Odak Not</title>
 
 <style>
-body{
-    margin:0;
-    font-family:Arial;
-    background:#0a0a0a;
-    color:white;
-}
+body{margin:0;font-family:Arial;background:#0a0a0a;color:white}
 
-/* HEADER */
-header{
-    text-align:center;
-    padding:25px;
-}
+header{text-align:center;padding:20px}
 
-header h1{
-    font-size:34px;
-}
-
-header p{
-    font-size:18px;
-    color:#aaa;
-}
-
-/* TOP BAR */
 #bar{
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    flex-wrap:wrap;
-    padding:10px;
+display:flex;
+gap:10px;
+justify-content:center;
+padding:10px;
+flex-wrap:wrap;
 }
 
 button{
-    padding:14px 22px;
-    border:0;
-    border-radius:10px;
-    cursor:pointer;
-    background:#222;
-    color:white;
-    font-size:16px;
-    transition:.2s;
+padding:10px 20px;
+border:0;
+border-radius:8px;
+cursor:pointer;
+background:#222;
+color:white;
+transition:.2s;
 }
 
-button:hover{
-    background:red;
-    transform:scale(1.08);
-}
+button:hover{background:red;transform:scale(1.05)}
 
 #search{
-    padding:12px;
-    border-radius:10px;
-    border:0;
-    background:#222;
-    color:white;
-    font-size:16px;
-    width:220px;
+padding:10px;
+border-radius:8px;
+border:0;
+background:#222;
+color:white;
 }
 
-/* NOTES */
 #notes{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:18px;
-    padding:20px;
+display:flex;
+flex-wrap:wrap;
+gap:15px;
+justify-content:center;
+padding:20px;
 }
 
 .note{
-    width:240px;
-    min-height:150px;
-    padding:15px;
-    border-radius:12px;
-    cursor:pointer;
-    transition:.25s;
-    font-size:16px;
+width:200px;
+min-height:120px;
+padding:10px;
+border-radius:10px;
+cursor:pointer;
+transition:.2s;
 }
 
-.note b{
-    font-size:18px;
-}
+.note:hover{transform:scale(1.05);box-shadow:0 0 15px red}
 
-.note:hover{
-    transform:scale(1.06);
-    box-shadow:0 0 20px red;
-}
+.red{background:#3a0000}
+.blue{background:#001133}
+.green{background:#003300}
+.yellow{background:#333300}
 
-/* COLORS */
-.red{background:#3a0000;}
-.blue{background:#001133;}
-.green{background:#003300;}
-.yellow{background:#333300;}
-
-/* MODAL */
 #modal{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.85);
-    justify-content:center;
-    align-items:center;
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.8);
+justify-content:center;
+align-items:center;
 }
 
 .box{
-    background:#111;
-    padding:22px;
-    border-radius:12px;
-    width:320px;
+background:#111;
+padding:20px;
+border-radius:10px;
+width:300px;
 }
 
 input,textarea,select{
-    width:100%;
-    margin:6px 0;
-    padding:10px;
-    border:0;
-    border-radius:8px;
-    background:#222;
-    color:white;
-    font-size:16px;
+width:100%;
+margin:5px 0;
+padding:8px;
+border:0;
+border-radius:6px;
+background:#222;
+color:white;
 }
 
-textarea{
-    height:120px;
-}
+textarea{height:100px}
 
-.save{
-    background:green;
-    font-size:16px;
-}
-
-.save:hover{
-    background:#00ff88;
-}
+.save{background:green}
 </style>
 </head>
 
 <body>
 
 <header>
-    <h1>🔥 Odak Not</h1>
-    <p>Şifreli Not Defteri</p>
+<h2>🔥 Odak Not</h2>
+<p>Şifreli Not Defteri</p>
 </header>
 
 <div id="bar">
-    <button id="add">➕ Not Ekle</button>
-    <input id="search" placeholder="Not ara...">
+<button id="add">➕ Not Ekle</button>
+<input id="search" placeholder="Ara...">
 </div>
 
 <div id="notes"></div>
 
-<!-- MODAL -->
 <div id="modal">
-    <div class="box">
-        <input id="title" placeholder="Başlık">
-        <textarea id="text" placeholder="Not yaz..."></textarea>
-        <input id="pass" type="password" placeholder="Şifre (opsiyonel)">
+<div class="box">
+<input id="title" placeholder="Başlık">
+<textarea id="text" placeholder="Not"></textarea>
+<input id="pass" type="password" placeholder="Şifre (opsiyonel)">
 
-        <select id="color">
-            <option value="red">Kırmızı</option>
-            <option value="blue">Mavi</option>
-            <option value="green">Yeşil</option>
-            <option value="yellow">Sarı</option>
-        </select>
+<select id="color">
+<option value="red">Kırmızı</option>
+<option value="blue">Mavi</option>
+<option value="green">Yeşil</option>
+<option value="yellow">Sarı</option>
+</select>
 
-        <button class="save" id="save">Kaydet</button>
-    </div>
+<button class="save" id="save">Kaydet</button>
+</div>
 </div>
 
 <script>
@@ -190,12 +143,9 @@ const search = document.getElementById("search");
 
 /* OPEN */
 add.onclick = () => {
-    modal.style.display = "flex";
-    edit = null;
-
-    add.style.transform = "scale(1.1)";
-    setTimeout(()=>add.style.transform="scale(1)",200);
-};
+modal.style.display="flex";
+edit=null;
+}
 
 /* SAVE */
 save.onclick = () => {
@@ -228,12 +178,12 @@ if(n.title.toLowerCase().includes(f) || n.text.toLowerCase().includes(f)){
 let d = document.createElement("div");
 d.className="note "+n.color;
 
-d.innerHTML = `<b>${n.title}</b><br><br>${n.text.slice(0,60)}`;
+d.innerHTML = `<b>${n.title}</b><br>${n.text.slice(0,40)}`;
 
 d.onclick=()=>{
 if(n.pass){
-let p = prompt("Şifre gir:");
-if(p!=n.pass){alert("Yanlış şifre!");return;}
+let p = prompt("Şifre:");
+if(p!=n.pass){alert("Yanlış!");return;}
 }
 
 title.value=n.title;
