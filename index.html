@@ -95,23 +95,7 @@ let notes = JSON.parse(localStorage.getItem("notes")) || [];
 let currentIndex = null;
 
 // Site şifresi
-const SITE_PASSWORD = "1234"; // Burayı istediğin gibi değiştir
-const loginModal = document.getElementById("loginModal");
-const loginBtn = document.getElementById("loginBtn");
-const sitePasswordInput = document.getElementById("sitePassword");
 
-const addBtn=document.getElementById("addNote");
-const container=document.getElementById("notesContainer");
-const modal=document.getElementById("modal");
-const titleInput=document.getElementById("noteTitle");
-const textInput=document.getElementById("noteText");
-const colorSelect=document.getElementById("noteColor");
-const passwordInput=document.getElementById("notePassword");
-const searchInput=document.getElementById("searchInput");
-
-const passwordModal=document.getElementById("passwordModal");
-const checkPassword=document.getElementById("checkPassword");
-const unlockBtn=document.getElementById("unlockBtn");
 
 // Giriş ekranı göster
 loginModal.style.display="flex";
