@@ -6,11 +6,7 @@
 <title>Odak Not</title>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
 background:#0a0a0a;
@@ -18,84 +14,63 @@ color:white;
 font-family:Arial;
 }
 
-/* Başlık */
 header{
 text-align:center;
 padding:25px;
 }
 
-h1{
-font-size:34px;
-}
+h1{font-size:34px;}
 
-/* Üst bar */
 #bar{
 display:flex;
-justify-content:flex-start;
+gap:10px;
 align-items:center;
-gap:15px;
 padding:10px 15px;
 }
 
-/* Buton */
 button{
-padding:12px 18px;
+padding:12px 16px;
 border:none;
 border-radius:8px;
 cursor:pointer;
 background:#222;
 color:white;
-font-size:16px;
 }
 
-button:hover{
-background:red;
-}
+button:hover{background:red;}
 
-/* Arama (küçük ve butonun yanında) */
 #search{
 width:140px;
-padding:8px 10px;
+padding:8px;
 border:none;
 border-radius:6px;
 background:#222;
 color:white;
-font-size:14px;
 }
 
-/* Notlar */
 #notes{
 display:flex;
 flex-wrap:wrap;
 justify-content:center;
-gap:18px;
+gap:15px;
 padding:20px;
 }
 
-/* Not kartı (BÜYÜTÜLDÜ) */
 .note{
 width:260px;
-min-height:160px;
-padding:18px;
+min-height:150px;
+padding:15px;
 border-radius:12px;
 cursor:pointer;
 font-size:18px;
-transition:.2s;
 }
 
-.note:hover{
-transform:scale(1.05);
-box-shadow:0 0 18px red;
-}
-
-/* Renkler */
 .red{background:#3a0000;}
 .blue{background:#001133;}
 .green{background:#003300;}
 .yellow{background:#333300;}
 
-/* Modal */
-#modal{
+#modal,#passModal{
 display:none;
 position:fixed;
 inset:0;
@@ -121,14 +96,11 @@ background:#222;
 color:white;
 }
 
-textarea{
-height:120px;
-resize:none;
-}
+textarea{height:120px;}
 
-.save{
-background:green;
-}
+.save{background:green;}
+.delete{background:#aa0000;}
+.delete:hover{background:red;}
 </style>
 </head>
 
@@ -136,10 +108,8 @@ background:green;
 
 <header>
 <h1>🔥 Odak Not</h1>
-<p>Şifreli Not Defteri</p>
 </header>
 
-<!-- Üst bar: Not ekle + Arama küçük -->
 <div id="bar">
 <button id="add">➕ Not Ekle</button>
 <input id="search" placeholder="Ara...">
@@ -147,12 +117,12 @@ background:green;
 
 <div id="notes"></div>
 
+<!-- Not modal -->
 <div id="modal">
 <div class="box">
 <input id="title" placeholder="Başlık">
 <textarea id="text" placeholder="Not"></textarea>
 <input id="pass" type="password" placeholder="Şifre (opsiyonel)">
-
 <select id="color">
 <option value="red">Kırmızı</option>
 <option value="blue">Mavi</option>
@@ -161,16 +131,27 @@ background:green;
 </select>
 
 <button class="save" id="save">Kaydet</button>
+<button class="delete" id="delete">Sil</button>
+</div>
+</div>
+
+<!-- Şifre ekranı -->
+<div id="passModal">
+<div class="box">
+<h3>Şifre Gir</h3>
+<input id="passInput" type="password" placeholder="Şifre">
+<button class="save" id="unlock">Aç</button>
 </div>
 </div>
 
 <script>
 let notes = JSON.parse(localStorage.getItem("notes")) || [];
 let edit = null;
+let openIndex = null;
 
 const add = document.getElementById("add");
 const modal = document.getElementById("modal");
-const save = document.getElementById("save");
+const passModal = document.getElementById("passModal");
 
 const title = document.getElementById("title");
 const text = document.getElementById("text");
@@ -180,12 +161,14 @@ const color = document.getElementById("color");
 const notesDiv = document.getElementById("notes");
 const search = document.getElementById("search");
 
+const passInput = document.getElementById("passInput");
+
 add.onclick = () => {
+edit = null;
 modal.style.display="flex";
-edit=null;
 };
 
-save.onclick = () => {
+document.getElementById("save").onclick = () => {
 
 let n = {
 title:title.value,
@@ -198,6 +181,15 @@ if(edit==null) notes.push(n);
 else notes[edit]=n;
 
 localStorage.setItem("notes",JSON.stringify(notes));
+modal.style.display="none";
+render();
+};
+
+document.getElementById("delete").onclick = () => {
+if(edit!=null){
+notes.splice(edit,1);
+localStorage.setItem("notes",JSON.stringify(notes));
+}
 modal.style.display="none";
 render();
 };
@@ -217,11 +209,23 @@ d.className="note "+n.color;
 d.innerHTML=`<b>${n.title}</b>`;
 
 d.onclick=()=>{
-let p = prompt("Şifre (yoksa boş bırak):");
-if(n.pass && p!=n.pass){
-alert("Yanlış!");
-return;
+openIndex=i;
+
+if(n.pass && n.pass.length>0){
+passModal.style.display="flex";
+passInput.value="";
+}else{
+openNote(i);
 }
+};
+
+notesDiv.appendChild(d);
+}
+});
+}
+
+function openNote(i){
+let n = notes[i];
 
 title.value=n.title;
 text.value=n.text;
@@ -230,14 +234,19 @@ color.value=n.color;
 
 edit=i;
 modal.style.display="flex";
+}
+
+document.getElementById("unlock").onclick = () => {
+if(notes[openIndex].pass === passInput.value){
+passModal.style.display="none";
+openNote(openIndex);
+}else{
+alert("Yanlış şifre!");
+}
 };
 
-notesDiv.appendChild(d);
-}
-});
-}
-
 search.oninput=render;
+
 render();
 </script>
 
