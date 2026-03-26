@@ -10,7 +10,6 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-outline:none;
 }
 
 body{
@@ -19,23 +18,25 @@ color:white;
 font-family:Arial;
 }
 
+/* Başlık */
 header{
 text-align:center;
-padding:20px;
+padding:25px;
 }
 
 h1{
-font-size:32px;
+font-size:34px;
 }
 
+/* Üst bar */
 #bar{
 display:flex;
-justify-content:center;
-gap:10px;
-padding:10px;
-flex-wrap:wrap;
+justify-content:space-between;
+align-items:center;
+padding:10px 15px;
 }
 
+/* Buton */
 button{
 padding:12px 18px;
 border:none;
@@ -43,13 +44,16 @@ border-radius:8px;
 cursor:pointer;
 background:#222;
 color:white;
+font-size:15px;
 }
 
 button:hover{
 background:red;
 }
 
+/* Arama (küçük köşede) */
 #search{
+width:180px;
 padding:10px;
 border:none;
 border-radius:8px;
@@ -57,34 +61,38 @@ background:#222;
 color:white;
 }
 
+/* Notlar */
 #notes{
 display:flex;
 flex-wrap:wrap;
 justify-content:center;
-gap:15px;
+gap:18px;
 padding:20px;
 }
 
+/* Not kartı (BÜYÜTÜLDÜ) */
 .note{
-width:200px;
-min-height:120px;
-padding:10px;
-border-radius:10px;
+width:260px;
+min-height:160px;
+padding:18px;
+border-radius:12px;
 cursor:pointer;
+font-size:18px;
 transition:.2s;
-border:none;
 }
 
 .note:hover{
 transform:scale(1.05);
-box-shadow:0 0 15px red;
+box-shadow:0 0 18px red;
 }
 
+/* Renkler */
 .red{background:#3a0000;}
 .blue{background:#001133;}
 .green{background:#003300;}
 .yellow{background:#333300;}
 
+/* Modal */
 #modal{
 display:none;
 position:fixed;
@@ -98,7 +106,7 @@ align-items:center;
 background:#111;
 padding:20px;
 border-radius:10px;
-width:320px;
+width:340px;
 }
 
 input,textarea,select{
@@ -109,17 +117,15 @@ border:none;
 border-radius:6px;
 background:#222;
 color:white;
-outline:none;
 }
 
-textarea{height:120px;}
+textarea{
+height:120px;
+resize:none;
+}
 
 .save{
 background:green;
-}
-
-.save:hover{
-background:#00aa00;
 }
 </style>
 </head>
@@ -128,7 +134,6 @@ background:#00aa00;
 
 <header>
 <h1>🔥 Odak Not</h1>
-<p>Şifreli Not Defteri</p>
 </header>
 
 <div id="bar">
@@ -205,12 +210,13 @@ if(n.title.toLowerCase().includes(f) || n.text.toLowerCase().includes(f)){
 let d = document.createElement("div");
 d.className="note "+n.color;
 
-d.innerHTML=`<b>${n.title}</b><br>${n.text.slice(0,40)}`;
+d.innerHTML=`<b>${n.title}</b>`;
 
 d.onclick=()=>{
-if(n.pass){
-let p = prompt("Şifre:");
-if(p!=n.pass){alert("Yanlış!");return;}
+let p = prompt("Şifre (yoksa boş bırak):");
+if(n.pass && p!=n.pass){
+alert("Yanlış!");
+return;
 }
 
 title.value=n.title;
