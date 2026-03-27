@@ -102,6 +102,12 @@ button{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;margin:5px
 let notes = JSON.parse(localStorage.getItem("notes")) || [];
 let currentIndex = null;
 
+// Site şifresi
+const SITE_PASSWORD = "1234"; // Burayı istediğin gibi değiştir
+const loginModal = document.getElementById("loginModal");
+const loginBtn = document.getElementById("loginBtn");
+const sitePasswordInput = document.getElementById("sitePassword");
+
 const addBtn=document.getElementById("addNote");
 const container=document.getElementById("notesContainer");
 const modal=document.getElementById("modal");
@@ -205,4 +211,4 @@ searchInput.oninput=renderNotes;
 </script>
 
 </body>
-</html>                   
+</html>             
