@@ -102,7 +102,7 @@ animation: zoomIn 0.25s ease;
 
 @keyframes zoomIn{
 from{transform:scale(0.7); opacity:0;}
-to{transform:scale(1); opacity:1);}
+to{transform:scale(1); opacity:1;}
 }
 
 button:active{
