@@ -1,46 +1,82 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Odak Not | Şifreli Not Defteri</title>
-<meta name="description" content="Odak Not: Şifreli ve renkli notlarınızı kaydedin, organize olun.">
-<meta name="keywords" content="odak not, not uygulaması, şifreli not, organize ol, productivity">
-<meta name="author" content="Hanzala Beyazkaz">
+<title>Odak Not | Not Defteri</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins', sans-serif;}
 body{background:#0a0a0a;color:#eaeaea;text-align:center;}
 h1{margin:30px 0;font-weight:600;}
-#controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
-#addNote{padding:15px 35px;font-size:18px;border:none;border-radius:12px;cursor:pointer;background:#1a1a1a;color:white;transition:0.3s;}
-#addNote:hover{background:red;transform:scale(1.1) rotate(-2deg);}
-#searchInput{padding:12px;width:250px;border-radius:10px;border:none;font-size:16px;background:#1a1a1a;color:white;}
 
-.notes{display:flex;flex-wrap:wrap;justify-content:center;gap:25px;padding:30px;}
-.note{width:230px;min-height:150px;border-radius:15px;padding:20px;cursor:pointer;transition:0.3s;position:relative;overflow:hidden;
-    backdrop-filter:blur(6px);
-    box-shadow:0 8px 25px rgba(255,0,0,0.2);
-    transform-style:preserve-3d;
+#controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+
+#addNote{
+padding:15px 35px;font-size:18px;border:none;border-radius:12px;
+cursor:pointer;background:#1a1a1a;color:white;transition:0.3s;
 }
-.note h3{margin-bottom:10px;font-weight:600;}
+#addNote:hover{background:red;transform:scale(1.1) rotate(-2deg);}
+
+#searchInput{
+padding:12px;width:250px;border-radius:10px;border:none;
+font-size:16px;background:#1a1a1a;color:white;
+}
+
+.notes{
+display:flex;flex-wrap:wrap;justify-content:center;gap:25px;padding:30px;
+}
+
+.note{
+width:230px;min-height:150px;border-radius:15px;padding:20px;
+cursor:pointer;transition:0.3s;position:relative;
+backdrop-filter:blur(6px);
+box-shadow:0 8px 25px rgba(255,0,0,0.2);
+}
+
+.note h3{margin-bottom:10px;}
 .note p{font-size:14px;}
+
 .note[data-color="kirmizi"]{background:#330000;}
 .note[data-color="mavi"]{background:#001133;}
 .note[data-color="yesil"]{background:#003300;}
 .note[data-color="sari"]{background:#333300;}
-.note:hover{transform:translateY(-5px) scale(1.03);box-shadow:0 12px 35px rgba(255,0,0,0.4);}
 
-.modal, #passwordModal, #loginModal{display:none;position:fixed;inset:0;backdrop-filter:blur(8px);background:rgba(0,0,0,0.8);justify-content:center;align-items:center;}
-.modal-content, #passwordModal .modal-content, #loginModal .modal-content{width:700px;max-width:95%;background:#111;padding:40px;border-radius:20px;animation:pop 0.3s ease;box-shadow:0 0 30px rgba(255,0,0,0.2);position:relative;}
-@keyframes pop{from{transform:scale(0.8);opacity:0;}to{transform:scale(1);opacity:1;}}
+.note:hover{
+transform:translateY(-5px) scale(1.03);
+box-shadow:0 12px 35px rgba(255,0,0,0.4);
+}
 
-input, select, textarea{width:100%;padding:12px;margin-bottom:15px;background:#1a1a1a;border:none;border-radius:10px;color:white;font-size:16px;}
+.modal{
+display:none;position:fixed;inset:0;
+backdrop-filter:blur(8px);
+background:rgba(0,0,0,0.8);
+justify-content:center;align-items:center;
+}
+
+.modal-content{
+width:700px;max-width:95%;
+background:#111;padding:40px;border-radius:20px;
+}
+
+input,select,textarea{
+width:100%;padding:12px;margin-bottom:15px;
+background:#1a1a1a;border:none;border-radius:10px;color:white;
+}
+
 textarea{height:250px;resize:none;}
-.buttons{margin-top:20px;display:flex;justify-content:flex-end;gap:10px;}
-button{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;margin:5px;font-weight:500;transition:0.3s;}
+
+.buttons{display:flex;justify-content:flex-end;gap:10px;}
+
+button{
+padding:10px 20px;border:none;border-radius:8px;
+cursor:pointer;
+}
+
 .saveBtn{background:#00aa55;color:white;}
 .saveBtn:hover{background:#00ff88;}
+
 .deleteBtn{background:#aa0000;color:white;}
 .deleteBtn:hover{background:red;}
 </style>
@@ -48,9 +84,7 @@ button{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;margin:5px
 
 <body>
 
-<h1>🔥 Odak Not | Şifreli Not Defteri</h1>
-
-<!-- Basit Giriş Ekranı -->
+<h1>🔥 Odak Not</h1>
 
 <div id="controls">
     <button id="addNote">➕ Not Ekle</button>
@@ -59,32 +93,24 @@ button{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;margin:5px
 
 <div class="notes" id="notesContainer"></div>
 
-<!-- Not Düzenleme Modal -->
+<!-- Not Modal -->
 <div class="modal" id="modal">
     <div class="modal-content">
-        <input type="text" id="noteTitle" placeholder="Başlık yaz...">
-        <textarea id="noteText" placeholder="Notunu buraya yaz..."></textarea>
-        <input type="password" id="notePassword" placeholder="Bu not için şifre (her zaman sorulacak)">
+        <input type="text" id="noteTitle" placeholder="Başlık">
+        <textarea id="noteText" placeholder="Not"></textarea>
+
+        <input type="password" id="notePassword" placeholder="Not şifresi (isteğe bağlı)">
+        
         <select id="noteColor">
             <option value="kirmizi">Kırmızı</option>
             <option value="mavi">Mavi</option>
             <option value="yesil">Yeşil</option>
             <option value="sari">Sarı</option>
         </select>
+
         <div class="buttons">
             <button class="saveBtn" onclick="saveNote()">Kaydet</button>
             <button class="deleteBtn" onclick="deleteNote()">Sil</button>
-        </div>
-    </div>
-</div>
-
-<!-- Şifre Kontrol Modal -->
-<div id="passwordModal">
-    <div class="modal-content">
-        <h3>Not Şifresi Gerekli</h3>
-        <input type="password" id="checkPassword" placeholder="Şifreyi gir...">
-        <div class="buttons">
-            <button class="saveBtn" id="unlockBtn">Kilidi Aç</button>
         </div>
     </div>
 </div>
@@ -93,52 +119,23 @@ button{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;margin:5px
 let notes = JSON.parse(localStorage.getItem("notes")) || [];
 let currentIndex = null;
 
-// Site şifresi
-const SITE_PASSWORD = "1234"; // Burayı istediğin gibi değiştir
-const loginModal = document.getElementById("loginModal");
-const loginBtn = document.getElementById("loginBtn");
-const sitePasswordInput = document.getElementById("sitePassword");
-
 const addBtn=document.getElementById("addNote");
 const container=document.getElementById("notesContainer");
 const modal=document.getElementById("modal");
+
 const titleInput=document.getElementById("noteTitle");
 const textInput=document.getElementById("noteText");
 const colorSelect=document.getElementById("noteColor");
 const passwordInput=document.getElementById("notePassword");
 const searchInput=document.getElementById("searchInput");
 
-const passwordModal=document.getElementById("passwordModal");
-const checkPassword=document.getElementById("checkPassword");
-const unlockBtn=document.getElementById("unlockBtn");
-
-// Giriş ekranı göster
-loginModal.style.display="flex";
-
-loginBtn.onclick = () => {
-  if(sitePasswordInput.value === SITE_PASSWORD){
-    loginModal.style.display="none";
-    renderNotes();
-  }else{
-    alert("Şifre yanlış!");
-  }
-};
-
-// Not ekleme
-addBtn.onclick=()=>{
-    currentIndex=null;
-    titleInput.value="";
-    textInput.value="";
-    colorSelect.value="kirmizi";
-    passwordInput.value="";
-    modal.style.display="flex";
-};
-
+// NOTLARI GÖSTER
 function renderNotes(){
     container.innerHTML="";
     const filter=searchInput.value.toLowerCase();
+
     notes.forEach((note,index)=>{
-        if(note.title.toLowerCase().includes(filter)||note.text.toLowerCase().includes(filter)){
+        if(note.title.toLowerCase().includes(filter) || note.text.toLowerCase().includes(filter)){
             const div=document.createElement("div");
             div.className="note";
             div.dataset.color=note.color;
@@ -149,36 +146,42 @@ function renderNotes(){
     });
 }
 
+// NOT EKLE
+addBtn.onclick=()=>{
+    currentIndex=null;
+    titleInput.value="";
+    textInput.value="";
+    colorSelect.value="kirmizi";
+    passwordInput.value="";
+    modal.style.display="flex";
+};
+
+// NOT AÇ
 function openNote(index){
     currentIndex=index;
     const note=notes[index];
-    checkPassword.value="";
-    passwordModal.style.display="flex";
+
+    titleInput.value=note.title;
+    textInput.value=note.text;
+    colorSelect.value=note.color;
+    passwordInput.value=note.password || "";
+
+    modal.style.display="flex";
 }
 
-unlockBtn.onclick=()=>{
-    if(notes[currentIndex].password===checkPassword.value){
-        modal.style.display="flex";
-        passwordModal.style.display="none";
-        titleInput.value=notes[currentIndex].title;
-        textInput.value=notes[currentIndex].text;
-        colorSelect.value=notes[currentIndex].color;
-        passwordInput.value=notes[currentIndex].password || "";
-    }else{
-        alert("Şifre yanlış!");
-    }
-}
-
+// KAYDET
 function saveNote(){
-    const title=titleInput.value;
-    const text=textInput.value;
-    const color=colorSelect.value;
-    const password=passwordInput.value;
+    const note={
+        title:titleInput.value,
+        text:textInput.value,
+        color:colorSelect.value,
+        password:passwordInput.value
+    };
 
     if(currentIndex===null){
-        notes.push({title,text,color,password});
+        notes.push(note);
     }else{
-        notes[currentIndex]={title,text,color,password};
+        notes[currentIndex]=note;
     }
 
     localStorage.setItem("notes",JSON.stringify(notes));
@@ -186,6 +189,7 @@ function saveNote(){
     renderNotes();
 }
 
+// SİL
 function deleteNote(){
     if(currentIndex!==null){
         notes.splice(currentIndex,1);
@@ -195,11 +199,16 @@ function deleteNote(){
     renderNotes();
 }
 
-modal.onclick=(e)=>{if(e.target===modal) modal.style.display="none";}
-passwordModal.onclick=(e)=>{if(e.target===passwordModal) passwordModal.style.display="none";}
+// SEARCH
 searchInput.oninput=renderNotes;
 
+// MODAL KAPAT
+modal.onclick=(e)=>{
+    if(e.target===modal) modal.style.display="none";
+};
+
+renderNotes();
 </script>
 
 </body>
-</html>             
+</html>
